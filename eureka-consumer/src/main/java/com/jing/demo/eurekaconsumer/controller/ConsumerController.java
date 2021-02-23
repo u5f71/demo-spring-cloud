@@ -5,7 +5,9 @@ import com.netflix.discovery.EurekaClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +33,9 @@ public class ConsumerController {
     @Autowired
     private EurekaClient eurekaClient;
 
+    @Autowired
+    private LoadBalancerClient loadBalancerClient;
+
     @GetMapping("/service-list")
     public String listService() {
         // 获取注册中心中的services.
@@ -55,5 +60,14 @@ public class ConsumerController {
 
         }
         return result;
+    }
+
+    @GetMapping("/client/ribbon/sayHi")
+    public String ribbonSayHi() {
+        // ribbon 完成客户端的负载均衡，过滤掉down了的节点
+        final ServiceInstance provider = loadBalancerClient.choose("provider");
+        String url = "http://" + provider.getHost() + ":" + provider.getPort() + "/getHi";
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(url, String.class);
     }
 }
