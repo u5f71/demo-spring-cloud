@@ -20,8 +20,8 @@ public class ConsumerController {
     @Autowired
     private DiscoveryClient discoveryClient;
 
-    @GetMapping("/client")
-    public String client1() {
+    @GetMapping("/service-list")
+    public String listService() {
         // 获取注册中心中的services.
         final List<String> services = discoveryClient.getServices();
         // services = [provider, consumer]
