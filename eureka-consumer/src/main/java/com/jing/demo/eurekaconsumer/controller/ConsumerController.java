@@ -39,6 +39,9 @@ public class ConsumerController {
     @Autowired
     private LoadBalancerClient loadBalancerClient;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @GetMapping("/service-list")
     public String listService() {
         // 获取注册中心中的services.
@@ -71,8 +74,8 @@ public class ConsumerController {
         final InstanceInfo instanceInfo = providerList.get(0);
         if (InstanceInfo.InstanceStatus.UP.equals(instanceInfo.getStatus())) {
             String url = "http://" + instanceInfo.getHostName() + ":" + instanceInfo.getPort() + "/getHi";
-            RestTemplate restTemplate = new RestTemplate();
-            result = restTemplate.getForObject(url, String.class);
+            RestTemplate restTemplate1 = new RestTemplate();
+            result = restTemplate1.getForObject(url, String.class);
 
         }
         return result;
@@ -80,10 +83,7 @@ public class ConsumerController {
 
     @GetMapping("/client/ribbon/sayHi")
     public String ribbonSayHi() {
-        // ribbon 完成客户端的负载均衡，过滤掉down了的节点
-        final ServiceInstance provider = loadBalancerClient.choose("provider");
-        String url = "http://" + provider.getHost() + ":" + provider.getPort() + "/getHi";
-        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://provider/getHi";
         return restTemplate.getForObject(url, String.class);
     }
 }
