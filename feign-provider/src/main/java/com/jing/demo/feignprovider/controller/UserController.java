@@ -34,7 +34,7 @@ public class UserController implements UserApi {
     public Person getById(Integer id) {
         Person p1 = new Person();
         p1.setAge(20);
-        p1.setName("stone");
+        p1.setName("stone-" + id);
         p1.setBirthday(new Date());
         return p1;
     }

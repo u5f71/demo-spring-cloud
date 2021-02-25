@@ -1,10 +1,7 @@
 package com.jing.demo.userapi;
 
 import com.jing.demo.userapi.bo.Person;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @description:
@@ -29,7 +26,9 @@ public interface UserApi {
      * @return
      */
     @GetMapping("/getById")
-    Person getById(Integer id);
+    Person getById(
+        @RequestParam("id")
+            Integer id);
 
     /**
      * post
