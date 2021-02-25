@@ -2,18 +2,30 @@ package com.jing.demo.feignprovider.controller;
 
 import com.jing.demo.userapi.UserApi;
 import com.jing.demo.userapi.bo.Person;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @description:
  * @author: jcwang
  * @create: 2021-02-24 16:54
  **/
-
+@Slf4j
 @RestController
 public class UserController implements UserApi {
+
+    @Value("${server.port}")
+    private String port;
+
+    /**
+     * 请求次数
+     */
+    private final AtomicInteger count = new AtomicInteger();
+
     /**
      * 是否可用
      *
@@ -21,6 +33,18 @@ public class UserController implements UserApi {
      */
     @Override
     public String alive() {
+        try {
+            int i = count.getAndIncrement();
+            log.info("count = {}, port = {}", i, port);
+            log.info("start sleeping");
+            Thread.sleep(6000);
+            log.info("end sleeping");
+
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
         return "ok";
     }
 
