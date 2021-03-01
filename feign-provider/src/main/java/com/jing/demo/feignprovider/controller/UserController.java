@@ -37,7 +37,7 @@ public class UserController implements UserApi {
             int i = count.getAndIncrement();
             log.info("count = {}, port = {}", i, port);
             log.info("start sleeping");
-            Thread.sleep(6000);
+            Thread.sleep(0);
             log.info("end sleeping");
 
         } catch (InterruptedException e) {
